@@ -1,6 +1,7 @@
 import axios from "axios";
 import { setAlert } from "./alert";
 import {
+  LOGOUT,
   AUTH_ERROR,
   LOGIN_FAIL,
   USER_LOADED,
@@ -71,12 +72,13 @@ export const login = (email, password) => async dispatch => {
   const body = JSON.stringify({ email, password });
 
   try {
-    const { data } = await axios.post("/api/users", body, config);
+    const { data } = await axios.post("/api/auth", body, config);
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: data
     });
+    dispatch(loadUser());
   } catch (error) {
     const errors = error.response.data.errors;
 
@@ -88,4 +90,11 @@ export const login = (email, password) => async dispatch => {
       type: LOGIN_FAIL
     });
   }
+};
+
+// Logout / Clear profile
+export const logout = () => dispatch => {
+  dispatch({
+    type: LOGOUT
+  });
 };
